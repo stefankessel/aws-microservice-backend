@@ -7,7 +7,7 @@ export class CdkMicroserviceStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const table = new Table(this, 'product', {
+    const productTable = new Table(this, 'product', {
       partitionKey: {
         name: 'id',
         type: AttributeType.STRING
@@ -18,5 +18,11 @@ export class CdkMicroserviceStack extends cdk.Stack {
       tableName: 'product'
       
     })
+
+    // create NodeFunction
+    // props in NodeFunctionProps
+    // give lambda permission to access dynamodb table
+
+    
   }
 }
