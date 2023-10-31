@@ -1,4 +1,5 @@
 import * as cdk from 'aws-cdk-lib';
+import { LambdaRestApi } from 'aws-cdk-lib/aws-apigateway';
 import { AttributeType, BillingMode, Table } from 'aws-cdk-lib/aws-dynamodb';
 import { Runtime } from 'aws-cdk-lib/aws-lambda';
 import { NodejsFunction, NodejsFunctionProps } from 'aws-cdk-lib/aws-lambda-nodejs';
@@ -46,6 +47,24 @@ export class CdkMicroserviceStack extends cdk.Stack {
     // give lambda permission to access dynamodb table
     productTable.grantReadWriteData(productLambda)
 
+
+    // API-Gateway RestAPI
+
+    const restAPI = new LambdaRestApi(this, 'productapi', {
+      // design api methods and ressources seperatly
+      proxy: false,
+      handler: productLambda,
+      restApiName: 'Product Service'
+    })
+
+    const product = restAPI.root.addResource('product')
+    product.addMethod('GET')
+    product.addMethod('POST')
+
+    const productItem = product.addResource('{id}')
+    productItem.addMethod('GET')
+    productItem.addMethod('POST')
+    productItem.addMethod('DELETE')
 
   }
 }
